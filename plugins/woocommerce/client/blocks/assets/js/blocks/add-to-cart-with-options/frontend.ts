@@ -217,7 +217,7 @@ const { actions, state } = store<
 				const { selectedAttributes } = getContext< Context >();
 
 				return getProductData(
-					productContextState.productId,
+					productContextState.currentProductId,
 					selectedAttributes
 				);
 			},
@@ -339,10 +339,10 @@ const { actions, state } = store<
 				const { selectedAttributes } = getContext< Context >();
 
 				const id =
-					productContextState.variationId ||
-					productContextState.productId;
+					productContextState.currentVariationId ||
+					productContextState.currentProductId;
 
-				const productType = productContextState.variationId
+				const productType = productContextState.currentVariationId
 					? 'variation'
 					: getProductData( id, selectedAttributes )?.type;
 

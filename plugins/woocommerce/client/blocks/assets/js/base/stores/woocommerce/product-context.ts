@@ -20,7 +20,7 @@ const productsStore = store< ProductsStore >( 'woocommerce/products', {
  * The context shape set by the woocommerce/single-product block. When the
  * add-to-cart-with-options block (or any other consumer) renders inside a
  * Single Product block, this per-element context takes precedence over the
- * global template state so that each product in a loop gets its own IDs.
+ * server-hydrated state so that each product in a loop gets its own IDs.
  */
 type SingleProductContext = {
 	productId: number;
@@ -30,10 +30,8 @@ type SingleProductContext = {
 export type ProductContextState = {
 	productId: number;
 	variationId: number | null;
-	templateState: {
-		productId: number;
-		variationId: number | null;
-	};
+	currentProductId: number;
+	currentVariationId: number | null;
 };
 
 const productContextStore = store< {
@@ -50,35 +48,36 @@ const productContextStore = store< {
 	'woocommerce/product-context',
 	{
 		state: {
-			get productId(): number {
+			get currentProductId(): number {
 				const context = getContext< SingleProductContext >(
 					'woocommerce/single-product'
 				);
 				return (
-					context?.productId ??
-					productContextStore.state.templateState?.productId
+					context?.productId ?? productContextStore.state.productId
 				);
 			},
-			get variationId(): number | null {
+			get currentVariationId(): number | null {
 				const context = getContext< SingleProductContext >(
 					'woocommerce/single-product'
 				);
 				return (
 					context?.variationId ??
-					productContextStore.state.templateState?.variationId
+					productContextStore.state.variationId
 				);
 			},
 			get parentProduct(): ProductResponseItem | undefined {
 				return productsStore.state.products[
-					productContextStore.state.productId
+					productContextStore.state.currentProductId
 				];
 			},
 			get selectedVariation(): ProductResponseItem | undefined {
-				const { variationId } = productContextStore.state;
-				if ( variationId === null ) {
+				const { currentVariationId } = productContextStore.state;
+				if ( currentVariationId === null ) {
 					return undefined;
 				}
-				return productsStore.state.productVariations[ variationId ];
+				return productsStore.state.productVariations[
+					currentVariationId
+				];
 			},
 			get currentProduct(): ProductResponseItem | undefined {
 				return (
@@ -95,8 +94,7 @@ const productContextStore = store< {
 				if ( context?.productId !== undefined ) {
 					context.productId = productId;
 				} else {
-					productContextStore.state.templateState.productId =
-						productId;
+					productContextStore.state.productId = productId;
 				}
 			},
 			setVariationId: ( variationId: number | null ) => {
@@ -106,8 +104,7 @@ const productContextStore = store< {
 				if ( context?.variationId !== undefined ) {
 					context.variationId = variationId;
 				} else {
-					productContextStore.state.templateState.variationId =
-						variationId;
+					productContextStore.state.variationId = variationId;
 				}
 			},
 		},
