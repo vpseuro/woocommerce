@@ -29,6 +29,15 @@ const tracking = {
 };
 
 export function SettingsPanel() {
+	const showSettingsPanel = useMemo(
+		() =>
+			applyFilters(
+				'woocommerce_email_editor_show_settings_panel',
+				true
+			) as boolean,
+		[]
+	);
+
 	const SidebarExtensionComponent = useMemo(
 		() =>
 			applyFilters(
@@ -48,6 +57,10 @@ export function SettingsPanel() {
 			) as () => JSX.Element,
 		[]
 	);
+
+	if ( ! showSettingsPanel ) {
+		return null;
+	}
 
 	return (
 		<PluginDocumentSettingPanel

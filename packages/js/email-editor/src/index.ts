@@ -235,6 +235,36 @@ export { SendPreviewEmail } from './components/preview';
 export { RichTextWithButton } from './components/personalization-tags/rich-text-with-button';
 
 /**
+ * A sidebar component for selecting and managing email templates.
+ *
+ * Displays the currently active template with options to edit or swap templates.
+ * This component is rendered by default inside the Settings panel, but consumers
+ * can hide the entire panel via the `woocommerce_email_editor_show_settings_panel`
+ * filter and render `TemplateSelection` in a custom location.
+ *
+ * @example
+ * ```jsx
+ * import { TemplateSelection } from '@woocommerce/email-editor';
+ * import { addFilter } from '@wordpress/hooks';
+ *
+ * // Hide the default settings panel
+ * addFilter(
+ *   'woocommerce_email_editor_show_settings_panel',
+ *   'my-plugin/email-editor',
+ *   () => false
+ * );
+ *
+ * // Render TemplateSelection in a custom location
+ * function MyCustomSidebar() {
+ *   return <TemplateSelection />;
+ * }
+ * ```
+ *
+ * @since 1.0.0
+ */
+export { TemplateSelection } from './components/sidebar/template-selection';
+
+/**
  * Event tracking utilities for the email editor.
  *
  * These functions provide analytics and usage tracking capabilities for the email editor.
