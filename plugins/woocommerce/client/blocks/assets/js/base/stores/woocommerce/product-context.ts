@@ -17,12 +17,11 @@ const productsStore = store< ProductsStore >( 'woocommerce/products', {
 } );
 
 /**
- * The context shape set by the woocommerce/single-product block. When the
- * add-to-cart-with-options block (or any other consumer) renders inside a
- * Single Product block, this per-element context takes precedence over the
+ * Per-element context set via data-wp-context on wrapper elements (e.g. the
+ * SingleProduct block). When present, this takes precedence over the
  * server-hydrated state so that each product in a loop gets its own IDs.
  */
-type SingleProductContext = {
+type ProductContext = {
 	productId: number;
 	variationId: number | null;
 };
@@ -49,17 +48,13 @@ const productContextStore = store< {
 	{
 		state: {
 			get currentProductId(): number {
-				const context = getContext< SingleProductContext >(
-					'woocommerce/single-product'
-				);
+				const context = getContext< ProductContext >();
 				return (
 					context?.productId ?? productContextStore.state.productId
 				);
 			},
 			get currentVariationId(): number | null {
-				const context = getContext< SingleProductContext >(
-					'woocommerce/single-product'
-				);
+				const context = getContext< ProductContext >();
 				return (
 					context?.variationId ??
 					productContextStore.state.variationId
@@ -88,9 +83,7 @@ const productContextStore = store< {
 		},
 		actions: {
 			setProductId: ( productId: number ) => {
-				const context = getContext< SingleProductContext >(
-					'woocommerce/single-product'
-				);
+				const context = getContext< ProductContext >();
 				if ( context?.productId !== undefined ) {
 					context.productId = productId;
 				} else {
@@ -98,9 +91,7 @@ const productContextStore = store< {
 				}
 			},
 			setVariationId: ( variationId: number | null ) => {
-				const context = getContext< SingleProductContext >(
-					'woocommerce/single-product'
-				);
+				const context = getContext< ProductContext >();
 				if ( context?.variationId !== undefined ) {
 					context.variationId = variationId;
 				} else {
