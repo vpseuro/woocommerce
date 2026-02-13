@@ -4,6 +4,7 @@
 import { __ } from '@wordpress/i18n';
 import { applyFilters } from '@wordpress/hooks';
 import { useMemo } from '@wordpress/element';
+import { createSlotFill } from '@wordpress/components';
 // eslint-disable-next-line @woocommerce/dependency-group
 import {
 	ErrorBoundary,
@@ -15,7 +16,6 @@ import {
  * Internal dependencies
  */
 import { RichTextWithButton } from '../personalization-tags/rich-text-with-button';
-import { TemplateSelection } from './template-selection';
 import {
 	recordEvent,
 	recordEventOnce,
@@ -28,16 +28,12 @@ const tracking = {
 	debouncedRecordEvent,
 };
 
-export function SettingsPanel() {
-	const showSettingsPanel = useMemo(
-		() =>
-			applyFilters(
-				'woocommerce_email_editor_show_settings_panel',
-				true
-			) as boolean,
-		[]
-	);
+const { Fill: TemplateSelectionFill, Slot: TemplateSelectionSlot } =
+	createSlotFill( 'WooCommerceEmailEditorTemplateSelection' );
 
+export { TemplateSelectionFill };
+
+export function SettingsPanel() {
 	const SidebarExtensionComponent = useMemo(
 		() =>
 			applyFilters(
@@ -58,10 +54,6 @@ export function SettingsPanel() {
 		[]
 	);
 
-	if ( ! showSettingsPanel ) {
-		return null;
-	}
-
 	return (
 		<PluginDocumentSettingPanel
 			name="email-settings-panel"
@@ -69,7 +61,7 @@ export function SettingsPanel() {
 			className="woocommerce-email-editor__settings-panel"
 		>
 			{ <EmailStatusComponent /> }
-			{ <TemplateSelection /> }
+			<TemplateSelectionSlot />
 			{ /* @ts-expect-error canCopyContent is missing in @types/wordpress__editor */ }
 			<ErrorBoundary canCopyContent>
 				{ <SidebarExtensionComponent /> }

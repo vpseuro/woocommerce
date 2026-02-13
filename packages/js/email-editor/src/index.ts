@@ -235,29 +235,61 @@ export { SendPreviewEmail } from './components/preview';
 export { RichTextWithButton } from './components/personalization-tags/rich-text-with-button';
 
 /**
- * A sidebar component for selecting and managing email templates.
+ * A Fill component for the TemplateSelection slot in the Settings panel.
  *
- * Displays the currently active template with options to edit or swap templates.
- * This component is rendered by default inside the Settings panel, but consumers
- * can hide the entire panel via the `woocommerce_email_editor_show_settings_panel`
- * filter and render `TemplateSelection` in a custom location.
+ * Use this Fill together with `registerPlugin` to render content in the
+ * TemplateSelection slot inside the email editor's Settings panel.
+ * The default registration can be removed with `unregisterPlugin` and
+ * replaced with a custom implementation.
  *
  * @example
  * ```jsx
- * import { TemplateSelection } from '@woocommerce/email-editor';
- * import { addFilter } from '@wordpress/hooks';
+ * import { TemplateSelectionFill, TemplateSelection } from '@woocommerce/email-editor';
+ * import { registerPlugin, unregisterPlugin } from '@wordpress/plugins';
  *
- * // Hide the default settings panel
- * addFilter(
- *   'woocommerce_email_editor_show_settings_panel',
- *   'my-plugin/email-editor',
- *   () => false
- * );
+ * // Remove the default TemplateSelection from the Settings panel
+ * unregisterPlugin( 'woocommerce-email-editor-template-selection' );
+ *
+ * // Render TemplateSelection in a custom location via registerPlugin
+ * registerPlugin( 'my-custom-template-selection', {
+ *   scope: 'woocommerce-email-editor',
+ *   render: () => (
+ *     <TemplateSelectionFill>
+ *       <TemplateSelection />
+ *     </TemplateSelectionFill>
+ *   ),
+ * } );
+ * ```
+ *
+ * @since 1.0.0
+ */
+export { TemplateSelectionFill } from './components/sidebar/settings-panel';
+
+/**
+ * A sidebar component for selecting and managing email templates.
+ *
+ * Displays the currently active template with options to edit or swap templates.
+ * This component is rendered by default inside the Settings panel via a
+ * `registerPlugin` registration. Consumers can remove it with `unregisterPlugin`
+ * and re-render it in a custom location.
+ *
+ * @example
+ * ```jsx
+ * import { TemplateSelectionFill, TemplateSelection } from '@woocommerce/email-editor';
+ * import { registerPlugin, unregisterPlugin } from '@wordpress/plugins';
+ *
+ * // Remove the default TemplateSelection from the Settings panel
+ * unregisterPlugin( 'woocommerce-email-editor-template-selection' );
  *
  * // Render TemplateSelection in a custom location
- * function MyCustomSidebar() {
- *   return <TemplateSelection />;
- * }
+ * registerPlugin( 'my-custom-template-selection', {
+ *   scope: 'woocommerce-email-editor',
+ *   render: () => (
+ *     <MyCustomPanel>
+ *       <TemplateSelection />
+ *     </MyCustomPanel>
+ *   ),
+ * } );
  * ```
  *
  * @since 1.0.0

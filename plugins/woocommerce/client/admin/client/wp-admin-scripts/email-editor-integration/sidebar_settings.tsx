@@ -11,9 +11,14 @@ import {
 	__experimentalText as Text,
 } from '@wordpress/components';
 import { addFilter } from '@wordpress/hooks';
+import { registerPlugin } from '@wordpress/plugins';
 import { __ } from '@wordpress/i18n';
 import clsx from 'clsx';
 import { useState } from '@wordpress/element';
+import {
+	TemplateSelectionFill,
+	TemplateSelection,
+} from '@woocommerce/email-editor';
 
 /**
  * Internal dependencies
@@ -306,4 +311,12 @@ export function modifySidebar() {
 			);
 		}
 	);
+	registerPlugin( 'woocommerce-email-editor-template-selection', {
+		scope: 'woocommerce-email-editor',
+		render: () => (
+			<TemplateSelectionFill>
+				<TemplateSelection />
+			</TemplateSelectionFill>
+		),
+	} );
 }

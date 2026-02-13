@@ -1,0 +1,4 @@
+Significance: minor
+Type: add
+
+Register TemplateSelection in the email editor Settings panel via SlotFill and registerPlugin
